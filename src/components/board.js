@@ -1,9 +1,11 @@
 import Square from "./square";
 import { useState } from "react";
+import History from "./history";
 
 function Board() {
   const [isXNext, setisXNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
+  const [history, setHistory] = useState(Array());
 
   function handleClick(i) {
     console.log(calcWinner(squares));
@@ -11,9 +13,17 @@ function Board() {
       return;
     }
     const newSquares = squares.slice();
+    setHistory([...history, newSquares]);
     isXNext ? (newSquares[i] = "X") : (newSquares[i] = "O");
     setSquares(newSquares);
     setisXNext(!isXNext);
+    setHistory([...history, newSquares]);
+  }
+
+  function reset() {
+    setSquares(Array(9).fill(null));
+    setHistory([]);
+    setisXNext(true);
   }
 
   let winner;
@@ -41,7 +51,14 @@ function Board() {
         <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
       </div>
-      <div id="div"></div>
+
+      <button onClick={() => reset()}> Reset </button>
+
+      <History
+        history={history}
+        setSquares={setSquares}
+        sethistory={setHistory}
+      />
     </>
   );
 }
@@ -67,4 +84,13 @@ function calcWinner(squares) {
     }
   }
   return null;
+}
+
+function printHistory(array) {
+  if (array) {
+    for (let i = 0; i < array.length; i++) {
+      console.log(array[i]);
+    }
+  }
+  console.log(array);
 }
