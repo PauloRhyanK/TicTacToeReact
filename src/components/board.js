@@ -13,12 +13,31 @@ function Board() {
       return;
     }
     const newSquares = squares.slice();
-    setHistory([...history, newSquares]);
     isXNext ? (newSquares[i] = "X") : (newSquares[i] = "O");
     setSquares(newSquares);
     setisXNext(!isXNext);
     setHistory([...history, newSquares]);
   }
+
+  const renderSquare = (i) => (
+    <Square key={i} value={squares[i]} onSquareClick={() => handleClick(i)} />
+  );
+
+  const renderBoard = (i) => {
+    const board = [];
+    for (let row = 0; row < 3; row++) {
+      const boardrow = [];
+      for (let col = 0; col < 3; col++) {
+        boardrow.push(renderSquare(row * 3 + col));
+      }
+      board.push(
+        <div key={row} className="board-row">
+          {boardrow}
+        </div>
+      );
+    }
+    return board;
+  };
 
   function reset() {
     setSquares(Array(9).fill(null));
@@ -36,21 +55,7 @@ function Board() {
   return (
     <>
       <div className="status">{winner}</div>
-      <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
-      </div>
+      {renderBoard()}
 
       <button onClick={() => reset()}> Reset </button>
 
